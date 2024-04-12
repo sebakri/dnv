@@ -16,6 +16,8 @@ func GenerateScripts(sg ScriptGenerator, env *Environment) error {
 
 	sg.SaveScript(loadScript.Content, "load")
 
+	updateStatus(env)
+
 	if sg.ScriptExists("unload") {
 		sg.PrependToScript(unloadScript.Content, "unload")
 	} else {
@@ -25,7 +27,7 @@ func GenerateScripts(sg ScriptGenerator, env *Environment) error {
 	return nil
 }
 
-func updateStatus(env *Environment) Status {
+func updateStatus(env *Environment) {
 	var status Status
 
 	for key := range env.Variables.Added {
@@ -36,5 +38,5 @@ func updateStatus(env *Environment) Status {
 		status.Env.Replaced = append(status.Env.Replaced, key)
 	}
 
-	return status
+	UpdateStatus(status)
 }

@@ -19,6 +19,7 @@ func main() {
 		Commands: []*cli.Command{
 			cmd.InitCommand(),
 			cmd.GenerateCommand(),
+			cmd.StatusCommand(),
 		},
 		Before: func(c *cli.Context) error {
 			debug, exists := os.LookupEnv("DNV_DEBUG")
