@@ -32,7 +32,7 @@ Configure your shell to initialize `dnv`. Select yours from the list below:
 Add the following to the end of your PowerShell configuration (find it by running `$PROFILE`):
 
 ```powershell
-Invoke-Expression (& { (dnv init -debug pwsh | Out-String) })
+Invoke-Expression (& { (dnv init pwsh | Out-String) })
 ```
 
 </details>
