@@ -36,6 +36,7 @@ func CreateEnvironment(cfgs []*config.Config) *Environment {
 			if exists {
 				log.Debug("Found existing environment variable: ", key)
 				if _, ok := env.Variables.Replaced[key]; !ok {
+					log.Debug("Replacing environment variable: ", key)
 					env.Variables.Replaced[key] = ReplaceValue{Old: ev, New: value}
 				} else {
 					log.Debug("Environment variable already replaced: ", key)
@@ -43,6 +44,7 @@ func CreateEnvironment(cfgs []*config.Config) *Environment {
 					env.Variables.Replaced[key] = ReplaceValue{Old: oldValue, New: value}
 				}
 			} else {
+				log.Debug("Adding environment variable: ", key)
 				env.Variables.Added[key] = value
 			}
 		}
