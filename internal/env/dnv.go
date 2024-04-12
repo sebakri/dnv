@@ -18,6 +18,11 @@ func init() {
 	dnvEnv.EnvLoaded = os.Getenv("DNV_ENV_LOADED")
 	dnvEnv.Shell = os.Getenv("DNV_SHELL")
 	dnvEnv.Debug = os.Getenv("DNV_DEBUG") == "true"
+
+	// Create session folder if it doesn't exist
+	if _, err := os.Stat(dnvEnv.SessionFolder); os.IsNotExist(err) {
+		os.MkdirAll(dnvEnv.SessionFolder, os.ModePerm)
+	}
 }
 
 func GetDNV() DNV {
