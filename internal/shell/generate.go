@@ -1,9 +1,5 @@
 package shell
 
-import (
-	"github.com/sebakri/dnv/internal/log"
-)
-
 func GenerateScripts(sg ScriptGenerator, env *Environment) error {
 	loadScript := new(Script)
 	unloadScript := new(Script)
@@ -18,11 +14,6 @@ func GenerateScripts(sg ScriptGenerator, env *Environment) error {
 		unloadScript.AddLine(sg.AddEnvironmentVariable(key, value.Old))
 	}
 
-	status := createStatus(env)
-
-	log.Debug(status.String())
-	log.Debug(status.Short())
-
 	sg.SaveScript(loadScript.Content, "load")
 
 	if sg.ScriptExists("unload") {
@@ -34,7 +25,7 @@ func GenerateScripts(sg ScriptGenerator, env *Environment) error {
 	return nil
 }
 
-func createStatus(env *Environment) Status {
+func updateStatus(env *Environment) Status {
 	var status Status
 
 	for key := range env.Variables.Added {

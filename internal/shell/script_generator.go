@@ -1,8 +1,13 @@
 package shell
 
-import "github.com/sebakri/dnv/internal/pwsh"
+type GenerateContext struct {
+	SessionFolder string
+	ShellID       string
+	SessionID     string
+}
 
 type ScriptGenerator interface {
+	Ctx() GenerateContext
 	AddEnvironmentVariable(name string, value string) []byte
 	RemoveEnvironmentVariable(name string) []byte
 	AddToPath(path string) []byte
@@ -15,12 +20,11 @@ type ScriptGenerator interface {
 	ScriptExtension() string
 }
 
-func GetScriptGenerator(shellId string) ScriptGenerator {
-	switch shellId {
-	case "pwsh":
-		return pwsh.NewScriptGenerator()
-	default:
-		return nil
-	}
+type Script struct {
+	Content []byte
+}
 
+func (s *Script) AddLine(line []byte) {
+	s.Content = append(s.Content, line...)
+	s.Content = append(s.Content, "\n"...)
 }

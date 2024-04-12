@@ -4,7 +4,9 @@ import (
 	"os"
 
 	"github.com/sebakri/dnv/internal/config"
+	"github.com/sebakri/dnv/internal/env"
 	"github.com/sebakri/dnv/internal/log"
+	"github.com/sebakri/dnv/internal/pwsh"
 	"github.com/sebakri/dnv/internal/shell"
 	"github.com/urfave/cli/v2"
 )
@@ -52,7 +54,13 @@ func GenerateCommand() *cli.Command {
 				return nil
 			}
 
-			sg := shell.GetScriptGenerator(os.Getenv("DNV_SHELL"))
+			gctx := shell.GenerateContext{
+				SessionFolder: env.GetDNV().SessionFolder,
+				ShellID:       env.GetDNV().Shell,
+				SessionID:     env.GetDNV().SessionId,
+			}
+
+			sg := getScriptGenerator(env.GetDNV().Shell, gctx)
 
 			if sg == nil {
 				log.Debug("Shell not supported")
@@ -68,4 +76,14 @@ func GenerateCommand() *cli.Command {
 			return nil
 		},
 	}
+}
+
+func getScriptGenerator(shellId string, ctx shell.GenerateContext) shell.ScriptGenerator {
+	switch shellId {
+	case "pwsh":
+		return pwsh.NewScriptGenerator(ctx)
+	default:
+		return nil
+	}
+
 }
