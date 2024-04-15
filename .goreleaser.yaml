@@ -56,9 +56,12 @@ scoops:
 changelog:
   sort: asc
   filters:
+    include:
+      - "^feat"
+      - "^fix"
     exclude:
-      - "^docs:"
-      - "^test:"
+      - "^docs"
+      - "^test"
 
 release:
   github:
