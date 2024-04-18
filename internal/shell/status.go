@@ -17,29 +17,35 @@ type EnvStatus struct {
 }
 
 type Status struct {
-	Env EnvStatus
+	Env *Environment
+}
+
+func NewStatusFromEnvironment(env *Environment) Status {
+	return Status{
+		Env: env,
+	}
 }
 
 func (s Status) Short() string {
-	return fmt.Sprintf("+%d <>%d", len(s.Env.Added), len(s.Env.Replaced))
+	return fmt.Sprintf("+%d", len(s.Env.Variables))
 }
 
 func (s Status) String() string {
 	var status []string
 
-	for _, added := range s.Env.Added {
-		status = append(status, fmt.Sprintf("+%s", added))
-	}
-
-	for _, replaced := range s.Env.Replaced {
-		status = append(status, fmt.Sprintf("<>%s", replaced))
+	for key := range s.Env.Variables {
+		status = append(status, fmt.Sprintf("+%s", key))
 	}
 
 	return strings.Join(status, " ")
 }
 
-func UpdateStatus(newStatus Status) {
+func UpdateStatus(newEnv *Environment) {
 	statusFile := filepath.Join(env.GetDNV().SessionFolder, "status")
+
+	newStatus := Status{
+		Env: newEnv,
+	}
 
 	statusJson, err := json.Marshal(newStatus)
 

@@ -16,8 +16,12 @@ type ScriptGenerator interface {
 	AppendToScript(script []byte, path string) error
 	PrependToScript(script []byte, path string) error
 	ScriptExists(path string) bool
-	AddComment(comment string) []byte
+	AddComment(comment string)
 	ScriptExtension() string
+
+	UnloadEnvironment(env *Environment)
+	LoadEnvironment(env *Environment)
+	Script() string
 }
 
 type Script struct {

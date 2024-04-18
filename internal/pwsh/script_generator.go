@@ -9,7 +9,8 @@ import (
 )
 
 type ScriptGenerator struct {
-	ctx shell.GenerateContext
+	ctx    shell.GenerateContext
+	script shell.Script
 }
 
 func NewScriptGenerator(ctx shell.GenerateContext) *ScriptGenerator {
@@ -27,7 +28,7 @@ func (sg *ScriptGenerator) AddEnvironmentVariable(name string, value string) []b
 }
 
 func (sg *ScriptGenerator) RemoveEnvironmentVariable(name string) []byte {
-	return []byte("Remove-Item env:\\" + name)
+	return []byte("Remove-Item -ErrorAction SilentlyContinue env:\\" + name)
 }
 
 func (sg *ScriptGenerator) AddToPath(path string) []byte {
@@ -66,8 +67,8 @@ func (sg *ScriptGenerator) ScriptExists(name string) bool {
 	return true
 }
 
-func (sg *ScriptGenerator) AddComment(comment string) []byte {
-	return []byte("# " + comment)
+func (sg *ScriptGenerator) AddComment(comment string) {
+	sg.script.AddLine([]byte("# " + comment))
 }
 
 func (sg *ScriptGenerator) PrependToScript(script []byte, name string) error {
@@ -90,4 +91,24 @@ func (sg ScriptGenerator) scriptPath(name string) string {
 	return filepath.Join(
 		sg.Ctx().SessionFolder,
 		strings.Join([]string{sg.Ctx().ShellID, sg.Ctx().SessionID, name + sg.ScriptExtension()}, "-"))
+}
+
+func (sg *ScriptGenerator) UnloadEnvironment(env *shell.Environment) {
+	for key, values := range env.Variables {
+		if values.Old == "" {
+			sg.script.AddLine(sg.RemoveEnvironmentVariable(key))
+		} else {
+			sg.script.AddLine(sg.AddEnvironmentVariable(key, values.Old))
+		}
+	}
+}
+
+func (sg *ScriptGenerator) LoadEnvironment(env *shell.Environment) {
+	for key, values := range env.Variables {
+		sg.script.AddLine(sg.AddEnvironmentVariable(key, values.New))
+	}
+}
+
+func (sg *ScriptGenerator) Script() string {
+	return string(sg.script.Content)
 }

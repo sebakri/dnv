@@ -12,21 +12,15 @@ type ReplaceValue struct {
 	Old string
 }
 
-type Variables struct {
-	Added    map[string]string
-	Replaced map[string]ReplaceValue
-}
-
 type Environment struct {
-	Variables Variables
+	LoadedFrom string
+	Variables  map[string]ReplaceValue
 }
 
 func CreateEnvironment(cfgs []*config.Config) *Environment {
 	env := &Environment{
-		Variables: Variables{
-			Added:    make(map[string]string),
-			Replaced: make(map[string]ReplaceValue),
-		},
+		LoadedFrom: cfgs[len(cfgs)-1].File,
+		Variables:  make(map[string]ReplaceValue),
 	}
 
 	for _, cfg := range cfgs {
@@ -35,17 +29,17 @@ func CreateEnvironment(cfgs []*config.Config) *Environment {
 
 			if exists {
 				log.Debug("Found existing environment variable: ", key)
-				if _, ok := env.Variables.Replaced[key]; !ok {
+				if _, ok := env.Variables[key]; !ok {
 					log.Debug("Replacing environment variable: ", key)
-					env.Variables.Replaced[key] = ReplaceValue{Old: ev, New: value}
+					env.Variables[key] = ReplaceValue{Old: ev, New: value}
 				} else {
 					log.Debug("Environment variable already replaced: ", key)
-					oldValue := env.Variables.Replaced[key].Old
-					env.Variables.Replaced[key] = ReplaceValue{Old: oldValue, New: value}
+					oldValue := env.Variables[key].Old
+					env.Variables[key] = ReplaceValue{Old: oldValue, New: value}
 				}
 			} else {
 				log.Debug("Adding environment variable: ", key)
-				env.Variables.Added[key] = value
+				env.Variables[key] = ReplaceValue{Old: "", New: value}
 			}
 		}
 	}
