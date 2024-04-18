@@ -32,7 +32,7 @@ Install `dnv` using any of the following package managers:
 
 </details>
 
-### Step 2. Set up your shell to use Starship
+### Step 2. Set up your shell to use dnv
 
 Configure your shell to initialize `dnv`. Select yours from the list below:
 
