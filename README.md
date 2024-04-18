@@ -2,6 +2,16 @@
 
 Yet another cli tool to load directory specific environemnt variables.
 
+### Currently supported shells
+
+- [x] PowerShell
+- [ ] Bash
+
+### Current features
+
+- [x] Load environment variables from `.dnv` file in the current directory.
+- [ ] Interpolate existing environemt variables to do smth like `PATH: [$PATH, "$PWD/bin"]`.
+
 ## Installation
 
 ### Step 1. Install dnv executable
@@ -36,3 +46,15 @@ Invoke-Expression (& { (dnv init pwsh | Out-String) })
 ```
 
 </details>
+
+## Usage
+
+Placing a `.dnv` file in a directory will load the environment variables defined in it.
+
+### Example
+
+```cue
+environment_variables : {
+	FOO: "BAR"
+}
+```
