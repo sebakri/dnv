@@ -59,6 +59,8 @@ changelog:
     include:
       - "^feat"
       - "^fix"
+      - "^refactor"
+      - "^perf"
     exclude:
       - "^docs"
       - "^test"
