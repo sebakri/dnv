@@ -21,7 +21,7 @@ $hook = [EventHandler[LocationChangedEventArgs]] {
       }
     }
     catch {
-      Write-Host $_.Exception.Message;
+      Write-Debug $_.Exception.Message;
     }
   }
 };
@@ -35,7 +35,7 @@ else {
 };
 
 function cleanupDNV {
-  Write-Host "Cleaning up DNV environment";
+  Write-Debug "Cleaning up DNV environment";
   Invoke-Expression "{{ .Command }} clean";
 }
 
