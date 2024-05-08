@@ -8,35 +8,41 @@ $env:DNV_SESSION_FOLDER = Join-Path $([System.IO.Path]::GetTempPath()) "dnv";
 
 $hook = [EventHandler[LocationChangedEventArgs]] {
   param([object] $source, [LocationChangedEventArgs] $eventArgs)
-  end {
-    try {
-      $unloadCmd = $({{ .Command }} unload | Out-String)
-      if($unloadCmd -ne "") {
+  end
+  {
+    try
+    {
+      $unloadCmd = $({{ .UnloadCommand }} | Out-String)
+      if($unloadCmd -ne "")
+      {
         Invoke-Expression $unloadCmd;
       }
 
-      $loadCmd = $({{ .Command }} load | Out-String)
-      if($loadCmd -ne "") {
+      $loadCmd = $({{ .LoadCommand }} | Out-String)
+      if($loadCmd -ne "")
+      {
         Invoke-Expression $loadCmd;
       }
-    }
-    catch {
+    } catch
+    {
       Write-Debug $_.Exception.Message;
     }
   }
 };
 
 $currentAction = $ExecutionContext.SessionState.InvokeCommand.LocationChangedAction;
-if ($currentAction) {
+if ($currentAction)
+{
   $ExecutionContext.SessionState.InvokeCommand.LocationChangedAction = [Delegate]::Combine($currentAction, $hook);
-}
-else {
+} else
+{
   $ExecutionContext.SessionState.InvokeCommand.LocationChangedAction = $hook;
 };
 
-function cleanupDNV {
+function cleanupDNV
+{
   Write-Debug "Cleaning up DNV environment";
-  Invoke-Expression "{{ .Command }} clean";
+  Invoke-Expression "{{ .CleanCommand }}";
 }
 
 Register-EngineEvent PowerShell.Exiting -Action { cleanupDNV } -SupportEvent;

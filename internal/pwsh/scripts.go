@@ -19,17 +19,20 @@ func InitScript() string {
 	var out bytes.Buffer
 
 	exe, err := os.Executable()
-
 	if err != nil {
 		panic(err)
 	}
 
 	template.Must(template.New("initTemplate").Funcs(sprig.FuncMap()).Parse(initTemplate)).Execute(&out, struct {
-		Command string
-		Debug   bool
+		UnloadCommand string
+		LoadCommand   string
+		CleanCommand  string
+		Debug         bool
 	}{
-		Command: exe,
-		Debug:   log.DebugEnabled(),
+		UnloadCommand: exe + " unload",
+		LoadCommand:   exe + " load",
+		CleanCommand:  exe + " clean",
+		Debug:         log.DebugEnabled(),
 	})
 
 	return out.String()
