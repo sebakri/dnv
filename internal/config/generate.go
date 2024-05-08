@@ -10,18 +10,16 @@ import (
 )
 
 func Parse(content string) (*Config, error) {
+	var r cue.Context
 
-	var r cue.Runtime
-
-	instance, err := r.Compile("test", content)
-
-	if err != nil {
-		return nil, err
+	value := r.CompileString(content)
+	if value.Err() != nil {
+		return nil, value.Err()
 	}
 
 	var cfg Config
 
-	if err := instance.Value().Decode(&cfg); err != nil {
+	if err := value.Decode(&cfg); err != nil {
 		return nil, err
 	}
 
