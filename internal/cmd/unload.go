@@ -65,7 +65,7 @@ func UnloadCommand() *cli.Command {
 			log.Debugf("Env: %+v \n", sh.LoadEnvironment())
 			log.Debug("Script: \n", sg.Script())
 
-			fmt.Fprintf(os.Stdout, sg.Script())
+			fmt.Fprint(os.Stdout, sg.Script())
 
 			return nil
 		},

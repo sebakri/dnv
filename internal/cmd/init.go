@@ -9,11 +9,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var (
-	supportedShells = []string{
-		"pwsh",
-	}
-)
+var supportedShells = []string{
+	"pwsh",
+}
 
 func InitCommand() *cli.Command {
 	return &cli.Command{
@@ -28,7 +26,7 @@ func InitCommand() *cli.Command {
 
 			switch c.Args().First() {
 			case "pwsh":
-				fmt.Fprintf(os.Stdout, pwsh.InitScript())
+				fmt.Fprint(os.Stdout, pwsh.InitScript())
 			}
 			return nil
 		},
