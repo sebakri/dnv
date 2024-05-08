@@ -10,7 +10,7 @@ Yet another cli tool to load directory specific environemnt variables.
 ### Current features
 
 - [x] Load environment variables from `.dnv` file in the current directory.
-- [ ] Interpolate existing environemt variables to do smth like `PATH: [$PATH, "$PWD/bin"]`.
+- [ ] Interpolate existing environment variables to do smth like `PATH: [$PATH, "$PWD/bin"]`.
 
 ## Installation
 
